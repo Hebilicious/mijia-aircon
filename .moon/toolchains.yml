@@ -1,0 +1,6 @@
+$schema: "https://moonrepo.dev/schemas/toolchains.json"
+
+# Keep in step with .prototools: proto resolves and installs the version,
+# this file tells moon to manage the Rust toolchain for tasks.
+rust:
+  version: "1.99.0"

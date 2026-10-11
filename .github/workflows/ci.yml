@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Runs every task unconditionally: `moon ci` diffs against a base revision and
+  # would run nothing on the first push to main.
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: ./.github/actions/toolchains
+
+      - run: moon run acctl:check acctl:lint acctl:test acctl:build omarchy:check

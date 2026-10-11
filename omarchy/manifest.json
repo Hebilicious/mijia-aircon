@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "mijia.aircon",
+  "name": "Mijia Air Conditioner",
+  "version": "0.1.0",
+  "author": "Hebilicious",
+  "description": "Control a Mijia air conditioner over the LAN (via acctl)",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Air Conditioner",
+    "description": "Power, temperature, mode, fan, comfort modes, airflow and louvres for a Mijia AC",
+    "category": "System",
+    "allowMultiple": false
+  }
+}

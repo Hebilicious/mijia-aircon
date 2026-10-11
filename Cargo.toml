@@ -1,0 +1,12 @@
+[workspace]
+resolver = "3"
+members = ["crates/acctl"]
+
+[workspace.package]
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/Hebilicious/mijia-aircon"
+
+[profile.release]
+strip = true
+lto = true
