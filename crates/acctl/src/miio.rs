@@ -161,7 +161,7 @@ impl Device {
             if (self.device_id == 0 || attempt > 0)
                 && let Err(e) = self.handshake()
             {
-                last_error = e.to_string();
+                last_error = describe(&e);
                 continue;
             }
             self.next_id += 1;
@@ -170,7 +170,7 @@ impl Device {
             let reply = match self.exchange(&self.packet(request.to_string().as_bytes())) {
                 Ok(reply) => reply,
                 Err(e) => {
-                    last_error = e.to_string();
+                    last_error = describe(&e);
                     continue;
                 }
             };
@@ -216,6 +216,15 @@ impl Device {
             .map(|(s, p, v)| json!({ "did": format!("{s}-{p}"), "siid": s, "piid": p, "value": v }))
             .collect();
         replies(self.send("set_properties", Value::Array(params))?)
+    }
+}
+
+/// A receive timeout surfaces as EAGAIN on Linux; say what it means. A device
+/// that is reachable but silent usually means a wrong token.
+fn describe(error: &std::io::Error) -> String {
+    match error.kind() {
+        ErrorKind::WouldBlock | ErrorKind::TimedOut => "timed out".to_string(),
+        _ => error.to_string(),
     }
 }
 
