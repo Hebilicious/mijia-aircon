@@ -1,7 +1,7 @@
 //! Xiaomi cloud: QR-code login and device listing, to fetch the AC's local token.
 //!
 //! Newer firmware no longer reveals the miIO token in the LAN handshake; only
-//! the AC and Xiaomi's cloud know it. `acctl setup` uses this once, then all
+//! the AC and Xiaomi's cloud know it. `aircon setup` uses this once, then all
 //! control is local. The cloud session is kept in memory only, never saved.
 //!
 //! The protocol is the one the Mi Home app speaks, as documented by

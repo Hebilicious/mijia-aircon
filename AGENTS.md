@@ -1,6 +1,6 @@
 # Agent guide
 
-Local control for a Xiaomi Mijia air conditioner: a Rust CLI and MCP server (`acctl`), and an
+Local control for a Xiaomi Mijia air conditioner: a Rust CLI and MCP server (`aircon`), and an
 Omarchy shell widget. Read [README.md](README.md) for usage and
 [docs/protocol.md](docs/protocol.md) for the protocol and the AC's interlocks.
 
@@ -8,11 +8,11 @@ Omarchy shell widget. Read [README.md](README.md) for usage and
 
 | Path | What |
 |---|---|
-| `crates/acctl/src/miio.rs` | miIO LAN client: packets, handshake, subnet rediscovery |
-| `crates/acctl/src/device.rs` | `CONTROLS` table (names → spec properties), `AirConditioner` |
-| `crates/acctl/src/cloud.rs` | Xiaomi QR login and device list, used only by `acctl setup` |
-| `crates/acctl/src/mcp.rs` | MCP server on stdio (rmcp) |
-| `crates/acctl/src/main.rs` | CLI (clap) |
+| `crates/aircon/src/miio.rs` | miIO LAN client: packets, handshake, subnet rediscovery |
+| `crates/aircon/src/device.rs` | `CONTROLS` table (names → spec properties), `AirConditioner` |
+| `crates/aircon/src/cloud.rs` | Xiaomi QR login and device list, used only by `aircon setup` |
+| `crates/aircon/src/mcp.rs` | MCP server on stdio (rmcp) |
+| `crates/aircon/src/main.rs` | CLI (clap) |
 | `omarchy/` | Quickshell bar widget for Omarchy (`Panel.qml`, `manifest.json`, `install.sh`) |
 
 ## Toolchain
@@ -21,20 +21,28 @@ proto pins moon and Rust in `.prototools`, and moon runs the tasks. Don't instal
 any other way.
 
 ```sh
-moon run acctl:check acctl:lint acctl:test   # must pass before committing
-moon run acctl:fmt                           # rustfmt
+proto install                                   # pinned Rust and moon
+moon run aircon:check aircon:lint aircon:test   # must pass before committing
+moon run aircon:fmt                             # rustfmt
 moon run omarchy:check
-moon run acctl:install                       # ~/.local/bin/acctl
-moon run omarchy:install                     # widget; restarts the Omarchy shell
+moon run aircon:install                         # ~/.local/bin/aircon
+moon run omarchy:install                        # widget; restarts the Omarchy shell
 ```
+
+## Releases
+
+Push a `vX.Y.Z` tag that matches `version` in `crates/aircon/Cargo.toml`. The release workflow
+then builds the Linux (static musl) and macOS binaries, packages the Omarchy widget, and
+publishes them with `SHA256SUMS` as a GitHub release. Asset names have no version in them, so
+the README's `releases/latest/download/...` links keep working.
 
 ## Rules
 
-- **A live AC is a shared, physical device.** Before experimenting, record `acctl status
+- **A live AC is a shared, physical device.** Before experimenting, record `aircon status
   --json`. Afterwards, restore every value you changed and confirm with a second status read.
 - **Never cycle power in tests.** The compressor has restart protection.
 - **No personal data in the repo:**
-  - tokens or `~/.config/acctl/config.json`
+  - tokens or `~/.config/aircon/config.json`
   - IP or MAC addresses
   - device or account ids
 - **Adding a control:**

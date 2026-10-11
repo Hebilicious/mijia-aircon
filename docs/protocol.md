@@ -19,16 +19,16 @@ with its id and current stamp, and every request must carry a stamp ahead of the
 On current firmware the hello reply hides the token (all `ff`).
 
 **Discovery.** This AC doesn't answer broadcast hellos, so finding it means probing every
-address in the subnet. `acctl` does this automatically when the configured address stops
+address in the subnet. `aircon` does this automatically when the configured address stops
 answering.
 
-The client is in `crates/acctl/src/miio.rs`.
+The client is in `crates/aircon/src/miio.rs`.
 
 ## The token
 
 The token is created when the AC is paired, and only the AC and Xiaomi's cloud know it.
-`acctl setup` reads it once from the account's device list, using the same calls as the Mi
-Home app (`crates/acctl/src/cloud.rs`):
+`aircon setup` reads it once from the account's device list, using the same calls as the Mi
+Home app (`crates/aircon/src/cloud.rs`):
 
 1. `GET account.xiaomi.com/longPolling/loginUrl` returns a QR image and a long-poll URL.
 2. Long-polling until the QR is scanned in Mi Home returns `ssecurity`, `userId` and a
@@ -51,7 +51,7 @@ The AC speaks MIoT: `get_properties` and `set_properties` address values by serv
 [miot-spec.org](https://miot-spec.org/miot-spec-v2/instance?type=urn:miot-spec-v2:device:air-conditioner:0000A004:xiaomi-ra1r00:2).
 The firmware accepts at most about 12 properties per request.
 
-`crates/acctl/src/device.rs` maps the app's feature names onto the spec:
+`crates/aircon/src/device.rs` maps the app's feature names onto the spec:
 
 | Control | siid-piid | Spec name |
 |---|---|---|

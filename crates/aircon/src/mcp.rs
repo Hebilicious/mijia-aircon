@@ -1,5 +1,5 @@
-//! MCP server (stdio): `acctl mcp`. Register with
-//!   claude mcp add aircon -s user -- ~/.local/bin/acctl mcp
+//! MCP server (stdio): `aircon mcp`. Register with
+//!   claude mcp add aircon -s user -- ~/.local/bin/aircon mcp
 
 use std::sync::{Arc, Mutex};
 

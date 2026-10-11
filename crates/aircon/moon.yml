@@ -6,22 +6,22 @@ tags: ["cli"]
 
 tasks:
   build:
-    command: "cargo build --release --package acctl"
+    command: "cargo build --release --package aircon"
     inputs: ["src/**/*", "Cargo.toml", "/Cargo.lock"]
   check:
-    command: "cargo clippy --package acctl --all-targets -- -D warnings"
+    command: "cargo clippy --package aircon --all-targets -- -D warnings"
     inputs: ["src/**/*", "Cargo.toml", "/Cargo.lock"]
   lint:
-    command: "cargo fmt --package acctl --check"
+    command: "cargo fmt --package aircon --check"
     inputs: ["src/**/*"]
   test:
-    command: "cargo test --package acctl"
+    command: "cargo test --package aircon"
     inputs: ["src/**/*", "Cargo.toml", "/Cargo.lock"]
   fmt:
-    command: "cargo fmt --package acctl"
+    command: "cargo fmt --package aircon"
     options:
       runInCI: false
-  # Installs to ~/.local/bin/acctl, which is on PATH for the Omarchy shell.
+  # Installs to ~/.local/bin/aircon, which is on PATH for the Omarchy shell.
   install:
     command: "cargo install --locked --path . --root $HOME/.local --force"
     options:

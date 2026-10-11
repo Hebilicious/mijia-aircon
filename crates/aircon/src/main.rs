@@ -1,4 +1,4 @@
-//! acctl - control a Mijia air conditioner over the LAN, and serve it over MCP.
+//! aircon - control a Mijia air conditioner over the LAN, and serve it over MCP.
 
 mod cloud;
 mod config;
@@ -16,7 +16,7 @@ use crate::device::{AirConditioner, CONTROLS};
 
 #[derive(Parser)]
 #[command(
-    name = "acctl",
+    name = "aircon",
     about = "Control the Mijia air conditioner over the LAN"
 )]
 struct Cli {
@@ -44,7 +44,7 @@ enum Action {
     Mode { value: String },
     /// Set the fan speed: auto or 1-7
     Fan { value: String },
-    /// Set controls: acctl set turbo=on airflow=circulate horizontal=left-center
+    /// Set controls: aircon set turbo=on airflow=circulate horizontal=left-center
     Set {
         #[arg(required = true, value_name = "NAME=VALUE")]
         assignments: Vec<String>,
@@ -205,7 +205,7 @@ fn setup(device: Option<&str>, host: Option<&str>, token: Option<&str>) -> Resul
     );
     if !device::TESTED_MODELS.contains(&config.model.as_str()) {
         eprintln!(
-            "warning: {} has not been tested; controls are mapped for {}. Check `acctl status` before relying on them.",
+            "warning: {} has not been tested; controls are mapped for {}. Check `aircon status` before relying on them.",
             config.model,
             device::TESTED_MODELS.join(", ")
         );
@@ -293,7 +293,7 @@ fn run(cli: Cli) -> Result<()> {
 
 fn main() {
     if let Err(error) = run(Cli::parse()) {
-        eprintln!("acctl: {error:#}");
+        eprintln!("aircon: {error:#}");
         std::process::exit(1);
     }
 }

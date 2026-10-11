@@ -2,8 +2,8 @@
 //!
 //! The miIO token gives full control of the AC to anyone on the LAN, so the
 //! file is created with mode 600 in a mode 700 directory:
-//! `$ACCTL_CONFIG`, else `$XDG_CONFIG_HOME/acctl/config.json`, else
-//! `~/.config/acctl/config.json`.
+//! `$AIRCON_CONFIG`, else `$XDG_CONFIG_HOME/aircon/config.json`, else
+//! `~/.config/aircon/config.json`.
 
 use std::fs;
 use std::os::unix::fs::PermissionsExt;
@@ -24,7 +24,7 @@ pub struct DeviceConfig {
 }
 
 pub fn path() -> PathBuf {
-    if let Some(path) = std::env::var_os("ACCTL_CONFIG") {
+    if let Some(path) = std::env::var_os("AIRCON_CONFIG") {
         return PathBuf::from(path);
     }
     let base = std::env::var_os("XDG_CONFIG_HOME")
@@ -32,13 +32,13 @@ pub fn path() -> PathBuf {
         .unwrap_or_else(|| {
             PathBuf::from(std::env::var_os("HOME").unwrap_or_default()).join(".config")
         });
-    base.join("acctl").join("config.json")
+    base.join("aircon").join("config.json")
 }
 
 pub fn load() -> Result<DeviceConfig> {
     let path = path();
     let text = fs::read_to_string(&path)
-        .with_context(|| format!("no AC configured in {}; run `acctl setup`", path.display()))?;
+        .with_context(|| format!("no AC configured in {}; run `aircon setup`", path.display()))?;
     serde_json::from_str(&text).with_context(|| format!("{} is not valid JSON", path.display()))
 }
 

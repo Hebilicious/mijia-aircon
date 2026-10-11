@@ -3,7 +3,7 @@ import Quickshell.Io
 import qs.Commons
 import qs.Ui
 
-// Mijia air conditioner, driven by the `acctl` CLI (miIO over the LAN).
+// Mijia air conditioner, driven by the `aircon` CLI (miIO over the LAN).
 // The CLI path can be overridden with the bar entry setting "command".
 // Bar: snowflake + target temperature while running, dimmed when off.
 //   click opens the panel, right-click toggles power, scroll nudges the target by 0.5°.
@@ -11,10 +11,10 @@ import qs.Ui
 // interlocks, see predict()), then a read-back corrects it.
 Panel {
   id: root
-  moduleName: "mijia.aircon"
-  ipcTarget: "mijia.aircon"
+  moduleName: "xiaomi.aircon"
+  ipcTarget: "xiaomi.aircon"
 
-  readonly property string acctl: setting("command", "acctl")
+  readonly property string cli: setting("command", "aircon")
   readonly property string icon: "󰜗"
   readonly property var modes: [
     { value: "cool", label: "Cool", icon: "󰜗" },
@@ -132,7 +132,7 @@ Panel {
   }
 
   // The AC's own interlocks, mirrored so the UI does not flicker while a
-  // write is in flight (see aircon/device.py for how they were observed).
+  // write is in flight (see docs/protocol.md for how they were observed).
   function predict(values) {
     var effects = {}
     if (values.turbo === true) effects.fan_speed = "7"
@@ -152,7 +152,7 @@ Panel {
     return Object.assign(effects, values)
   }
 
-  // Queue a write and show it immediately; flushed in one `acctl set` call.
+  // Queue a write and show it immediately; flushed in one `aircon set` call.
   function apply(values) {
     pending = Object.assign({}, pending, values)
     ac = Object.assign({}, ac, predict(values))
@@ -162,7 +162,7 @@ Panel {
   function flush() {
     var keys = Object.keys(pending)
     if (keys.length === 0 || setProc.running) return
-    var args = [acctl, "set"]
+    var args = [cli, "set"]
     for (var i = 0; i < keys.length; i++) {
       var value = pending[keys[i]]
       if (value === true) value = "on"
@@ -188,7 +188,7 @@ Panel {
 
   Process {
     id: statusProc
-    command: [root.acctl, "status", "--json"]
+    command: [root.cli, "status", "--json"]
     stdout: StdioCollector { waitForEnd: true; onStreamFinished: root.parseStatus(text) }
   }
 
@@ -196,7 +196,7 @@ Panel {
     id: setProc
     stderr: StdioCollector { id: setErrors; waitForEnd: true }
     onExited: function(exitCode) {
-      if (exitCode !== 0) console.warn("mijia.aircon: " + setErrors.text)
+      if (exitCode !== 0) console.warn("xiaomi.aircon: " + setErrors.text)
       if (Object.keys(root.pending).length > 0) root.flush()
       else root.refresh()
     }

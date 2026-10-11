@@ -1,5 +1,5 @@
 [package]
-name = "acctl"
+name = "aircon"
 version = "0.1.0"
 rust-version = "1.88"
 description = "Local LAN control for the Mijia Air Conditioner Pro Eco (xiaomi.airc.ra1r00): CLI and MCP server"

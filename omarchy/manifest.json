@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "mijia.aircon",
+  "id": "xiaomi.aircon",
   "name": "Mijia Air Conditioner",
   "version": "0.1.0",
   "author": "Hebilicious",
-  "description": "Control a Mijia air conditioner over the LAN (via acctl)",
+  "description": "Control a Mijia air conditioner over the LAN (via aircon)",
   "kinds": [
     "bar-widget"
   ],

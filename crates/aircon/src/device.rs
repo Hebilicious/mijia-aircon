@@ -478,7 +478,7 @@ impl AirConditioner {
         let config = config::load()?;
         if config.host.is_empty() || config.token.is_empty() {
             bail!(
-                "{} has no host or token; run `acctl setup`",
+                "{} has no host or token; run `aircon setup`",
                 config::path().display()
             );
         }

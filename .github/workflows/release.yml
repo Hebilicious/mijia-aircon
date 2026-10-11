@@ -1,0 +1,95 @@
+name: Release
+
+# A `vX.Y.Z` tag builds and publishes a release. Running the workflow by hand
+# builds everything without publishing, to try the build before tagging.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  binary:
+    strategy:
+      matrix:
+        include:
+          # musl gives a static binary that runs on any Linux distribution.
+          - target: x86_64-unknown-linux-musl
+            runner: ubuntu-latest
+          - target: aarch64-apple-darwin
+            runner: macos-latest
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: ./.github/actions/toolchains
+
+      - name: Add the target
+        shell: bash
+        run: |
+          rustup target add --toolchain "$(rustc --version | cut -d' ' -f2)" ${{ matrix.target }}
+          if [[ ${{ matrix.target }} == *musl ]]; then sudo apt-get install -y musl-tools; fi
+
+      - name: Build
+        run: cargo build --release --locked --package aircon --target ${{ matrix.target }}
+
+      - name: Package
+        shell: bash
+        run: |
+          mkdir dist
+          cp target/${{ matrix.target }}/release/aircon LICENSE README.md dist/
+          tar -czf aircon-${{ matrix.target }}.tar.gz -C dist aircon LICENSE README.md
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: aircon-${{ matrix.target }}
+          path: aircon-${{ matrix.target }}.tar.gz
+
+  omarchy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Package the widget
+        run: |
+          mkdir xiaomi-aircon-omarchy
+          cp omarchy/manifest.json omarchy/Panel.qml omarchy/install.sh xiaomi-aircon-omarchy/
+          tar -czf xiaomi-aircon-omarchy.tar.gz xiaomi-aircon-omarchy
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: xiaomi-aircon-omarchy
+          path: xiaomi-aircon-omarchy.tar.gz
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [binary, omarchy]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check the tag matches the crate version
+        run: |
+          version=$(grep -m1 '^version = ' crates/aircon/Cargo.toml | cut -d'"' -f2)
+          if [[ "${GITHUB_REF_NAME}" != "v${version}" ]]; then
+            echo "tag ${GITHUB_REF_NAME} does not match crates/aircon version ${version}" >&2
+            exit 1
+          fi
+
+      - uses: actions/download-artifact@v5
+        with:
+          path: assets
+          merge-multiple: true
+
+      - name: Checksums
+        working-directory: assets
+        run: sha256sum *.tar.gz > SHA256SUMS
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${GITHUB_REF_NAME}" assets/* --title "${GITHUB_REF_NAME}" --generate-notes

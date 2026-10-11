@@ -5,7 +5,7 @@
 # already-loaded plugin, so the restart is needed on every update.
 set -euo pipefail
 
-id="mijia.aircon"
+id="xiaomi.aircon"
 source_dir="$(cd "$(dirname "$0")" && pwd)"
 target_dir="${XDG_CONFIG_HOME:-$HOME/.config}/omarchy/plugins/$id"
 shell_config="${XDG_CONFIG_HOME:-$HOME/.config}/omarchy/shell.json"
@@ -14,8 +14,8 @@ if ! command -v omarchy >/dev/null 2>&1; then
   echo "omarchy is not installed; this widget is for the Omarchy shell" >&2
   exit 1
 fi
-if ! command -v acctl >/dev/null 2>&1; then
-  echo "warning: acctl is not on PATH; install it first (moon run acctl:install)" >&2
+if ! command -v aircon >/dev/null 2>&1; then
+  echo "warning: aircon is not on PATH; install it first (see the README's Install section)" >&2
 fi
 
 mkdir -p "$target_dir"

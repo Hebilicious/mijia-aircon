@@ -11,7 +11,7 @@ tasks:
       shell: true
   install:
     command: "bash install.sh"
-    deps: ["acctl:install"]
+    deps: ["aircon:install"]
     options:
       cache: false
       runInCI: false
