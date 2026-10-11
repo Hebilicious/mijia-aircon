@@ -1,0 +1,10 @@
+$schema: "https://moonrepo.dev/schemas/workspace.json"
+
+projects:
+  acctl: "crates/acctl"
+  omarchy: "omarchy"
+
+vcs:
+  client: "git"
+  defaultBranch: "main"
+  provider: "github"

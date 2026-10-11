@@ -1,0 +1,30 @@
+$schema: "https://moonrepo.dev/schemas/project.json"
+
+language: rust
+layer: application
+tags: ["cli"]
+
+tasks:
+  build:
+    command: "cargo build --release --package acctl"
+    inputs: ["src/**/*", "Cargo.toml", "/Cargo.lock"]
+  check:
+    command: "cargo clippy --package acctl --all-targets -- -D warnings"
+    inputs: ["src/**/*", "Cargo.toml", "/Cargo.lock"]
+  lint:
+    command: "cargo fmt --package acctl --check"
+    inputs: ["src/**/*"]
+  test:
+    command: "cargo test --package acctl"
+    inputs: ["src/**/*", "Cargo.toml", "/Cargo.lock"]
+  fmt:
+    command: "cargo fmt --package acctl"
+    options:
+      runInCI: false
+  # Installs to ~/.local/bin/acctl, which is on PATH for the Omarchy shell.
+  install:
+    command: "cargo install --locked --path . --root $HOME/.local --force"
+    options:
+      cache: false
+      runInCI: false
+      shell: true

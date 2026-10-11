@@ -1,0 +1,7 @@
+moon = "2.5.4"
+rust = "1.99.0"
+
+[settings]
+auto-install = true
+detect-strategy = "prefer-prototools"
+telemetry = false

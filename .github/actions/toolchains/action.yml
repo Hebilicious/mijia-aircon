@@ -1,0 +1,22 @@
+name: Toolchains
+description: Install the toolchains pinned in .prototools through proto and moon.
+
+runs:
+  using: composite
+  steps:
+    - uses: moonrepo/setup-toolchain@v0
+      with:
+        auto-install: true
+
+    # Installs everything in .moon/toolchains.yml; moon then puts the pinned
+    # toolchain on PATH for every task it runs.
+    - name: Setup toolchains
+      shell: bash
+      run: moon setup
+
+    - name: Show resolved tool versions
+      shell: bash
+      run: |
+        moon --version
+        cargo --version
+        rustc --version
