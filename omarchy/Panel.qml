@@ -115,6 +115,13 @@ Panel {
     return !ac.low_watt || ac.low_watt === "off" ? "Off" : "L" + ac.low_watt
   }
 
+  // L1 draws the least power, so the slider runs Off, L6 … L1: further right
+  // is a tighter cap. Slider position and level map onto each other by 7 - n
+  // (0 stays Off), so the same function converts both ways.
+  function flipLowWatt(n) {
+    return n === 0 ? 0 : 7 - n
+  }
+
   function refresh() {
     if (!statusProc.running && !setProc.running) statusProc.running = true
   }
@@ -450,7 +457,7 @@ Panel {
               }
             }
 
-            // ---------- Low watt: slider Off, L1-L6 (compressor modes only) ----------
+            // ---------- Low watt: slider Off, L6 … L1 (compressor modes only) ----------
             Section {
               title: "LOW WATT"
               value: root.lowWattLabel()
@@ -464,9 +471,9 @@ Panel {
                 step: 1
                 integer: true
                 tickCount: 7
-                value: parseInt(root.ac.low_watt) || 0
+                value: root.flipLowWatt(parseInt(root.ac.low_watt) || 0)
                 onReleased: function(v) {
-                  var level = Math.round(v)
+                  var level = root.flipLowWatt(Math.round(v))
                   root.apply({ low_watt: level === 0 ? "off" : String(level) })
                 }
               }

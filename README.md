@@ -89,7 +89,7 @@ aircon raw get 12 11            # any property from the spec, by siid/piid
 | `target_temperature` | 16–31 °C in 0.5° steps |
 | `fan_speed` | `auto`, `1`–`7` |
 | `ai_energy_saving`, `turbo`, `gentle`, `sleep`, `dryer` | `on`, `off` |
-| `low_watt` | `off`, `1`–`6` |
+| `low_watt` | `off`, `1`–`6` (power cap; `1` draws the least) |
 | `airflow` | `off`, `upward`, `downward`, `circulate` |
 | `horizontal` | `swing`, `off`, `left`, `left-center`, `center`, `right-center`, `right` |
 | `vertical` | `swing`, `off`, `up`, `up-center`, `center`, `down-center`, `down` |

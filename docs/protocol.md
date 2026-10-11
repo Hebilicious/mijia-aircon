@@ -63,7 +63,7 @@ The firmware accepts at most about 12 properties per request.
 | `sleep` | 2-11 | `sleep-mode` |
 | `gentle` | 2-18 | `list-soft-wind` |
 | `turbo` | 2-29 | `max-level` |
-| `low_watt` | 2-30 | `low-watt-level` |
+| `low_watt` | 2-30 | `low-watt-level` (0 off, 1 = lowest power … 6) |
 | `fan_speed` | 3-2 | `fan-level` (0 auto, 1–7) |
 | `horizontal` | 3-3 + 3-26 | `horizontal-swing` + `horizontal-position` (1–5, left to right) |
 | `vertical` | 3-4 + 3-25 | `vertical-swing` + `vertical-position` (1–5, up to down) |

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "xiaomi.aircon",
   "name": "Mijia Air Conditioner",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Hebilicious",
   "description": "Control a Mijia air conditioner over the LAN (via aircon)",
   "kinds": [
