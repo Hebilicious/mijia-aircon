@@ -26,10 +26,15 @@ jobs:
 
       - uses: ./.github/actions/toolchains
 
+      # Runners ship their own default Rust; pin rustup to the .prototools
+      # version for this and every later step, so the target and the build
+      # use the same toolchain.
       - name: Add the target
         shell: bash
         run: |
-          rustup target add --toolchain "$(rustc --version | cut -d' ' -f2)" ${{ matrix.target }}
+          toolchain=$(grep '^rust = ' .prototools | cut -d'"' -f2)
+          echo "RUSTUP_TOOLCHAIN=${toolchain}" >> "$GITHUB_ENV"
+          rustup toolchain install "${toolchain}" --profile minimal --target ${{ matrix.target }}
           if [[ ${{ matrix.target }} == *musl ]]; then sudo apt-get install -y musl-tools; fi
 
       - name: Build
